@@ -1,48 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    {% load static %}
-    {% load sass_tags %}
+{% extends "base_generic.html" %}
 
-    <!-- <link href="{% sass_src 'places/index.scss' %}" rel="stylesheet" type="text/css"> -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% block content %}
+  {% if top_places_list %}
+  <div class="w3-container">
+    {% for place in top_places_list %}
 
-    <title>NueReview</title>
-  </head>
-
-  <body>
-    <header class="w3-container w3-amber">
-      <div class="w3-display-bottomright w3-teal">
-        <Button class="w3-btn">
-      </div>
-    </header>
-
-    {% if top_places_list %}
-    <header class="w3-display-container w3-amber" style="height:150px;">
-      <div class="w3-display-bottommiddle">
-        <h1 class="w3-jumbo" style="font-family: Helvetica;">NueReview</h1>
-      </div>
-      <div class="w3-display-bottomright w3-padding-16">
-        <input class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" value="Login">
-      </div>
-    </header>
-    <div class="w3-container">
-      {% for place in top_places_list %}
-
-        <div class="w3-card w3-section">
-          <div class="w3-container">
-            <h1 class="name-text">{{place.name}}</h1>
-            <p class="suburb-text">{{place.suburb}}</p>
-          </div>
+      <div class="w3-card w3-section">
+        <div class="w3-container">
+          <h1 class="name-text">{{place.name}}</h1>
+          <p class="suburb-text">{{place.suburb}}</p>
         </div>
-        <a href="{% url 'places:detail' place.id %}"><span class="place-card-link"></span></a>
+      </div>
+      <a href="{% url 'places:detail' place.id %}"><span class="place-card-link"></span></a>
 
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="no-content">
-      <p>No top places to display</p>
-    </div>
-    {% endif %}
-  </body>
-</html>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-content">
+    <p>No top places to display</p>
+  </div>
+  {% endif %}
+{% endblock content %}

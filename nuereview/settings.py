@@ -58,7 +58,8 @@ ROOT_URLCONF = 'nuereview.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates',
+            os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,3 +135,8 @@ STATICFILES_FINDERS = [
 
 # Django Sass
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR,'static')
+
+LOGIN_REDIRECT_URL = '/places/'
+
+#Testin requirement
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

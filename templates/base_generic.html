@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {# % load static % #}
+    {# % load sass_tags % #}
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>NueReview</title>
+  </head>
+
+
+  <body>
+    <header class="w3-display-container w3-amber" style="height:150px;">
+      <div class="w3-display-Bottomleft w3-padding-16">
+        <a href="/places/"><i class="fa fa-home"></i></a>
+      </div>
+      <div class="w3-display-bottommiddle">
+        <h1 class="w3-jumbo" style="font-family: Helvetica;">NueReview</h1>
+      </div>
+
+      <div class="w3-display-bottomright">
+        {% if user.is_authenticated %}
+          <p>Logged in as:{{ user.get_username }}
+          <a class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+          </p>
+        {% else %}
+          <p>
+            <a class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" href="{% url 'login'%}?next={{request.path}}">Login</a>
+          </p>
+        {% endif %}
+      </div>
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+  </body>
+</html>
