@@ -1,0 +1,49 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+html, body {
+  background-color: #F5F5F5;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  height: 100%; }
+
+* {
+  box-sizing: border-box; }
+
+.card {
+  background-color: #fff;
+  border-radius: 4px;
+  max-width: 400px;
+  margin: 10% auto;
+  height: 100px;
+  position: relative;
+  padding: 34px;
+  color: #444;
+  cursor: pointer; }
+  .card:before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: #ccc;
+    left: 20px;
+    right: 20px;
+    bottom: 0;
+    top: 50%;
+    z-index: -1;
+    box-shadow: 0 0 40px #999999;
+    transition: box-shadow .2s ease-in-out; }
+  .card.place-simple:hover:before {
+    box-shadow: 0 0 80px #999999; }
+  .card h1 {
+    font-weight: 300;
+    font-size: 30px; }
+  .card p {
+    font-weight: lighter;
+    font-size: 14px;
+    color: lightgray; }
+
+.card place-simple {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #616161;
+  filter: drop-shadow(2px, 2px, 1px, #AAAAAA); }
+
+/*# sourceMappingURL=index.css.map */

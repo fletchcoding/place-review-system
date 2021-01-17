@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/detail.css' %}">
+
+    <title>NueReview - {{ place.name }}</title>
+  </head>
+
+  <body>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>
+    {% else %}
+    <div class="place-details">
+      <h1>{{ place.name }}</h1>
+      <h2>{{ place.street_address }} {{ place.suburb }} {{ place.state }}, {{ place.postcode }}</h2>
+    </div>
+    {% endif %}
+    
+  </body>
+</html>

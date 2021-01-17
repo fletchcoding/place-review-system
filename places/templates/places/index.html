@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    {% load sass_tags %}
+
+    <!-- <link href="{% sass_src 'places/index.scss' %}" rel="stylesheet" type="text/css"> -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>NueReview</title>
+  </head>
+
+  <body>
+    {% if top_places_list %}
+    <section class="w3-container">
+      {% for place in top_places_list %}
+
+        <div class="w3-card w3-section">
+          <div class="w3-container">
+            <h1 class="name-text">{{place.name}}</h1>
+            <p class="suburb-text">{{place.suburb}}</p>
+          </div>
+        </div>
+        <a href="{% url 'places:detail' place.id %}"><span class="place-card-link"></span></a>
+
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-content">
+      <p>No top places to display</p>
+    </div>
+    {% endif %}
+  </body>
+</html>
