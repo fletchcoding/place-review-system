@@ -11,8 +11,22 @@
   </head>
 
   <body>
+    <header class="w3-container w3-amber">
+      <div class="w3-display-bottomright w3-teal">
+        <Button class="w3-btn">
+      </div>
+    </header>
+
     {% if top_places_list %}
-    <section class="w3-container">
+    <header class="w3-display-container w3-amber" style="height:150px;">
+      <div class="w3-display-bottommiddle">
+        <h1 class="w3-jumbo" style="font-family: Helvetica;">NueReview</h1>
+      </div>
+      <div class="w3-display-bottomright w3-padding-16">
+        <input class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" value="Login">
+      </div>
+    </header>
+    <div class="w3-container">
       {% for place in top_places_list %}
 
         <div class="w3-card w3-section">
