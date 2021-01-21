@@ -1,17 +1,19 @@
 import datetime
 
 from django.db import models
+
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
 
 
 class Place(models.Model):
     class PlaceAttributes(models.TextChoices):
-        AMBIANCE = 'AMB', _('Ambiance')
         ATMOSPHERE = 'ATMS', _('Atmosphere')
         CLEANLINESS = 'CLN', _('Cleanliness')
+        DECOR = 'DCR', _('Decor')
         DRINK = 'DNK', _('Drink')
         ENTERTAINMENT = 'ENT', _('Entertainment')
         FOOD = 'FD', _('Food')
@@ -37,16 +39,50 @@ class Review(models.Model):
     """
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    review_date = models.DateTimeField('Date review published', null=True, blank=True)
+    visit_date = models.DateTimeField('Visit date and time', default=timezone.now())
+
     positive_feedback = ArrayField(
         models.CharField(choices=Place.PlaceAttributes.choices, max_length=4),
         blank=True,
-        null=True
+        null=True,
+        unique=True
     )
     negative_feedback = ArrayField(
         models.CharField(choices=Place.PlaceAttributes.choices, max_length=4),
         blank=True,
-        null=True
+        null=True,
+        unique=True
     )
+
+    def __str__(self):
+        return str(self.place) + ', by ' + str(self.visit_date)
+
+    def check_feedback_count(self):
+        """
+        Returns the total number of rated attrbutes
+        """
+        return len(self.positive_feedback) + len(self.negative_feedback)
+
+    def check_unique(self):
+        """
+        Returns true if positive_feedback and negative_feedback contain
+         unique items
+        """
+        return True if (len(set(self.positive_feedback).intersection(self.negative_feedback)) == 0) else False
+
+    def save(self, *args, **kwargs):
+        """
+        Override save function to check unique model constraints
+        """
+        if self.check_unique()==False:
+            raise ValidationError("Cannot rate an attribute BOTH negatively and positively.")
+
+        if self.check_feedback_count()<3:
+            raise ValidationError("Minimum of 3 attribute feedbacks required.")
+
+        super().save(*args, **kwargs)
+
 
 class Review_Record(models.Model):
     """
@@ -58,3 +94,10 @@ class Review_Record(models.Model):
         primary_key=True,
     )
     scores = models.JSONField(default=dict)
+
+    def update_record_with_newest_review(self, user):
+        """
+        Updates the place review record with a user's newest review
+        """
+        reviews = Review.objects.filter(reviewer = user)
+        print(reviews[0])

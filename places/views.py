@@ -12,7 +12,7 @@ class IndexView(generic.ListView):
         """
         Returns a subset of places in the database
         """
-        return Place.objects.all()[:5]
+        return Place.objects.filter(suburb__exact="Surry Hills")
 
 class DetailView(generic.DetailView):
     model = Place
