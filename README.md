@@ -2,8 +2,13 @@
 An overhaul of the current review system, enabling useful feedback through datapoints for hospitality venues 
 
 ## TODO:
+- User testing
 - Review form
 - Review testing
-- Review_Record constraints and modifier function
+- Review_Record constraints and update function
 - Review_Record testing
-- Update details view with review record
+- Details view to display scorecard
+- View testing
+
+## Considerations"
+- Consider what data to keep when users/reviews/venues are deleted
