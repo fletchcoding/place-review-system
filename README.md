@@ -12,3 +12,5 @@ An overhaul of the current review system, enabling useful feedback through datap
 
 ## Considerations"
 - Consider what data to keep when users/reviews/venues are deleted
+- Crossovers in place attributes?
+  -> Food/Drink and Quality
