@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views import generic
+from django.contrib.auth.models import User
 
 from .models import Place, Scorecard
-from .forms import ReviewForm
 
 
 class IndexView(generic.ListView):
