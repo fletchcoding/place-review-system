@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views import generic
 
-from .models import Place
+from .models import Place, Scorecard
+from .forms import ReviewForm
 
 
 class IndexView(generic.ListView):
@@ -12,7 +13,7 @@ class IndexView(generic.ListView):
         """
         Returns a subset of places in the database
         """
-        return Place.objects.all()[:5]
+        return Place.objects.all()
 
 class DetailView(generic.DetailView):
     model = Place
