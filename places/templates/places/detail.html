@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    {% load static %}
+{% extends "base_generic.html" %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'polls/detail.css' %}">
-
-    <title>NueReview - {{ place.name }}</title>
-  </head>
-
-  <body>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>
+{% block content %}
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
     {% else %}
-    <div class="place-details">
+    <div class="w3-panel w3-gray" onClick="document.getElementById('review_modal').style.display='block'" style="cursor:pointer;">
+      <p>Want to leave a review?</p>
+    </div>
+    <div id="review_modal" class="w3-modal">
+      <div class="w3-modal-content">
+        <div class="w3-container">
+          <span onclick="document.getElementById('review_modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="w3-container">
       <h1>{{ place.name }}</h1>
-      <h2>{{ place.street_address }} {{ place.suburb }} {{ place.state }}, {{ place.postcode }}</h2>
+      <h3>{{ place.street_address }}</h3>
+      <h3>{{ place.suburb }} {{ place.state }}, {{ place.postcode }}</h3>
     </div>
     {% endif %}
-    
-  </body>
-</html>
+
+{% endblock content %}

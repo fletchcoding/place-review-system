@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {# % load static % #}
+    {# % load sass_tags % #}
+
+        <title>{%block title %}NueReview{% endblock title%}</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+
+
+  <body>
+
+    <header class="w3-display-container w3-amber" style="height:150px;">
+      <div class="w3-display-bottomleft w3-container w3-padding-16">
+        <a href='/places/'><i class="fa fa-home w3-jumbo"></i></a>
+      </div>
+      <div class="w3-display-bottommiddle">
+        <h1 class="w3-xxxlarge" style="font-family: Helvetica; font-style:oblique;">NueReview</h1>
+      </div>
+
+      <div class="w3-display-bottomright">
+        {% if user.is_authenticated %}
+          <p>Logged in as:{{ user.get_username }}
+          <a class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+          </p>
+        {% else %}
+          <p>
+            <a class="w3-btn w3-gray w3-margin-left w3-margin-right" type="button" href="{% url 'login'%}?next={{request.path}}">Login</a>
+          </p>
+        {% endif %}
+      </div>
+    </header>
+    <main>
+      {% block content %} {% endblock content %}
+    </main>
+    <footer>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+      {% block javascript %} {% endblock javascript %}
+    </footer>
+  </body>
+</html>
