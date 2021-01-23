@@ -31,10 +31,12 @@ class Review(models.Model):
 
     def save(self, *args, **kwargs):
         """
+        TODO:
         Perform validation on associated Feedback
         """
-
         return super(Review, self).save(*args, **kwargs)
+
+
 
 class Feedback(models.Model):
     review = models.OneToOneField(Review, on_delete=models.CASCADE)
@@ -48,6 +50,24 @@ class Feedback(models.Model):
     service = models.BooleanField(null=True)
     speed = models.BooleanField(null=True)
     value = models.BooleanField(null=True)
+
+    def get_counts(self):
+        """
+        Returns the (Total, True, False) counts as tuple
+        """
+        count = 0
+        pos = 0
+        neg = 0
+        for field in _meta.fields:
+            if field.name != "review":
+                if field.value is True:
+                    pos += 1
+                elif field.value is False:
+                    neg += 1
+                count += 1
+        return (count, pos, neg)
+
+
 
 class Scorecard(models.Model):
     """
