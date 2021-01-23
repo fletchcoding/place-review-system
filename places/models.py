@@ -8,20 +8,21 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 
+class PLACE_ATTRIBUTES():
+    attr_list = (
+        ('AT', 'Atmosphere'),
+        ('CL', 'Cleanliness'),
+        ('DE', 'Decor'),
+        ('DR', 'Drink'),
+        ('EN', 'Entertainment'),
+        ('FO', 'Food'),
+        ('QU', 'Quality'),
+        ('SE', 'Service'),
+        ('SP', 'Speed'),
+        ('VA', 'Value'),
+    )
 
 class Place(models.Model):
-    class PlaceAttributes(models.TextChoices):
-        ATMOSPHERE = 'ATMS', _('Atmosphere')
-        CLEANLINESS = 'CLN', _('Cleanliness')
-        DECOR = 'DCR', _('Decor')
-        DRINK = 'DNK', _('Drink')
-        ENTERTAINMENT = 'ENT', _('Entertainment')
-        FOOD = 'FD', _('Food')
-        QUALITY = 'QLTY', _('Quality')
-        SERVICE = 'SRV', _('Service')
-        SPEED = 'SPD', _('Speed')
-        VALUE = 'VAL', _('Value')
-
     name = models.CharField(max_length=100)
     street_address = models.CharField(max_length=100)
     suburb = models.CharField(max_length=50)
@@ -30,8 +31,6 @@ class Place(models.Model):
 
     def __str__(self):
         return self.name + ', ' + self.suburb
-
-
 
 class Review(models.Model):
     """
@@ -43,13 +42,13 @@ class Review(models.Model):
     visit_date = models.DateTimeField('Visit date and time', default=timezone.now())
 
     positive_feedback = ArrayField(
-        models.CharField(choices=Place.PlaceAttributes.choices, max_length=4),
+        models.CharField(choices=PLACE_ATTRIBUTES.attr_list, max_length=4),
         blank=True,
         null=True,
         unique=True
     )
     negative_feedback = ArrayField(
-        models.CharField(choices=Place.PlaceAttributes.choices, max_length=4),
+        models.CharField(choices=PLACE_ATTRIBUTES.attr_list, max_length=4),
         blank=True,
         null=True,
         unique=True
@@ -84,7 +83,7 @@ class Review(models.Model):
         super().save(*args, **kwargs)
 
 
-class Review_Record(models.Model):
+class Scorecard(models.Model):
     """
     Maintains an updated score of each possible place attribute
     """

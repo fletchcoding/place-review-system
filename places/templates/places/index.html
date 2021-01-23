@@ -4,14 +4,14 @@
   {% if top_places_list %}
   <div class="w3-container">
     {% for place in top_places_list %}
-
       <div class="w3-card w3-section">
+        <a href="{% url 'places:detail' place.id %}" style="text-decoration:none;">
         <div class="w3-container">
           <h1 class="name-text">{{place.name}}</h1>
           <p class="suburb-text">{{place.suburb}}</p>
         </div>
+        </a>
       </div>
-      <a href="{% url 'places:detail' place.id %}"><span class="place-card-link"></span></a>
 
     {% endfor %}
   </div>
