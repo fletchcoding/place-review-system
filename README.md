@@ -4,6 +4,7 @@ An overhaul of the current review system, enabling useful feedback through datap
 ## TODO:
 - User testing
 - Review form
+  -> Add feedback model to review admin page
   -> Post operation validation
   -> Needs a seperate html page from detail (or extend differently), as it will handle errors differently
 - Review testing
