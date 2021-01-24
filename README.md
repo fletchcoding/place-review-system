@@ -4,11 +4,14 @@ An overhaul of the current review system, enabling useful feedback through datap
 ## TODO:
 - User testing
 - Review form
+  -> Post operation validation
+  -> Needs a seperate html page from detail (or extend differently), as it will handle errors differently
 - Review testing
 - Review_Record constraints and update function
 - Review_Record testing
 - Details view to display scorecard
 - View testing
+- Move away from w3.css and implement custom sass for UI
 
 ## Considerations"
 - Consider what data to keep when users/reviews/venues are deleted
