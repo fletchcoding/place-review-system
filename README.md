@@ -14,3 +14,4 @@ An overhaul of the current review system, enabling useful feedback through datap
 - Consider what data to keep when users/reviews/venues are deleted
 - Crossovers in place attributes?
   -> Food/Drink and Quality
+- Refactor review.html to remove repetition, need to reference and loop through Feedback model field names
