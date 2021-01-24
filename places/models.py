@@ -29,15 +29,6 @@ class Review(models.Model):
     def __str__(self):
         return str(self.place) + ' for ' + str(self.visit_date) + ', by ' + str(self.reviewer.username)
 
-    def save(self, *args, **kwargs):
-        """
-        TODO:
-        Perform validation on associated Feedback
-        """
-        return super(Review, self).save(*args, **kwargs)
-
-
-
 class Feedback(models.Model):
     review = models.OneToOneField(Review, on_delete=models.CASCADE)
     atmosphere = models.BooleanField(null=True)
@@ -51,23 +42,26 @@ class Feedback(models.Model):
     speed = models.BooleanField(null=True)
     value = models.BooleanField(null=True)
 
+    def get_field_names(cls):
+        names = []
+        for field in Feedback._meta.fields:
+            if field.name != "id" and field.name != 'review':
+                names.append(field.name)
+        return names
+
     def get_counts(self):
         """
         Returns the (Total, True, False) counts as tuple
         """
-        count = 0
         pos = 0
         neg = 0
-        for field in _meta.fields:
-            if field.name != "review":
-                if field.value is True:
+        for field in Feedback._meta.fields:
+            if field.name != "id" and field.name != 'review':
+                if field.value_from_object(self) is True:
                     pos += 1
-                elif field.value is False:
+                elif field.value_from_object(self) is False:
                     neg += 1
-                count += 1
-        return (count, pos, neg)
-
-
+        return (pos, neg)
 
 class Scorecard(models.Model):
     """
