@@ -25,6 +25,7 @@ class DetailView(generic.DetailView):
     model = Place
     template_name = 'places/detail.html'
 
+
 class ReviewView(generic.DetailView):
     model = Place
     template_name = 'places/review.html'
