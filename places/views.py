@@ -29,7 +29,6 @@ class ReviewView(generic.DetailView):
     model = Place
     template_name = 'places/review.html'
 
-
 @login_required
 def postreview(request, place_id):
     place = get_object_or_404(Place, pk=place_id)
@@ -50,4 +49,10 @@ def postreview(request, place_id):
     else:
         review.save()
         feedback.save()
+        if Scorecard.objects.filter(place=place).count() != 1:
+            sc = Scorecard()
+            place.scorecard = sc
+        place.scorecard.count_scores()
+        place.scorecard.save()
+        #place.scorecard.update_record_with_newest_review(request.user)
         return HttpResponseRedirect(reverse('places:detail', args=(place.id,)))
