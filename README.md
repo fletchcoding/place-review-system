@@ -9,6 +9,8 @@ An overhaul of the current review system, enabling useful feedback through datap
 - Scorecard
   - Constraints
   - Details view to display scorecard
+  - Count unique users
+  - Scores as percentages of unique users
 - Scorecard testing
 - View testing
 - Move away from w3.css and implement custom sass for UI
