@@ -1,0 +1,110 @@
+{% extends "places/detail.html" %}
+
+{% block review %}
+  <div class="w3-container">
+    <form action="{% url 'places:postreview' place.id %}" method="post">
+      {% csrf_token %}
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Atmosphere</legend>
+          <input type="radio" name="atmosphere" id="posatmosphere" value="good">
+          <label for="posatmosphere">Good</label>
+          <input type="radio" name="atmosphere" id="negatmosphere" value="poor">
+          <label for="negatmosphere">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Cleanliness</legend>
+          <input type="radio" name="cleanliness" id="poscleanliness" value="good">
+          <label for="poscleanliness">Good</label>
+          <input type="radio" name="cleanliness" id="negcleanliness" value="poor">
+          <label for="negcleanliness">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Decor</legend>
+          <input type="radio" name="decor" id="posdecor" value="good">
+          <label for="posatmosphere">Good</label>
+          <input type="radio" name="decor" id="negdecor" value="poor">
+          <label for="negdecor">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Drink</legend>
+          <input type="radio" name="drink" id="posdrink" value="good">
+          <label for="posdrink">Good</label>
+          <input type="radio" name="atmosphere" id="negdrink" value="poor">
+          <label for="negdrink">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Entertainment</legend>
+          <input type="radio" name="entertainment" id="posentertainment" value="good">
+          <label for="posentertainment">Good</label>
+          <input type="radio" name="atmosphere" id="negentertainment" value="poor">
+          <label for="negentertainment">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Food</legend>
+          <input type="radio" name="food" id="posfood" value="good">
+          <label for="posfood">Good</label>
+          <input type="radio" name="atmosphere" id="negfood" value="poor">
+          <label for="negfood">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Quality</legend>
+          <input type="radio" name="quality" id="posquality" value="good">
+          <label for="posquality">Good</label>
+          <input type="radio" name="atmosphere" id="negquality" value="poor">
+          <label for="negquality">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Service</legend>
+          <input type="radio" name="service" id="posservice" value="good">
+          <label for="posservice">Good</label>
+          <input type="radio" name="atmosphere" id="negservice" value="poor">
+          <label for="negservice">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Speed</legend>
+          <input type="radio" name="speed" id="posspeed" value="good">
+          <label for="posspeed">Good</label>
+          <input type="radio" name="atmosphere" id="negspeed" value="poor">
+          <label for="negspeed">Poor</label>
+        </fieldset>
+      </div>
+
+      <div class="w3-section">
+        <fieldset style="display:inline-block;">
+          <legend>Value</legend>
+          <input type="radio" name="value" id="posvalue" value="good">
+          <label for="posvalue">Good</label>
+          <input type="radio" name="atmosphere" id="negvalue" value="poor">
+          <label for="negvalue">Poor</label>
+        </fieldset>
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+{% endblock review %}

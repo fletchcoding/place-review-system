@@ -1,21 +1,35 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    {% load static %}
+{% extends "base_generic.html" %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'polls/detail.css' %}">
-
-    <title>NueReview - {{ place.name }}</title>
-  </head>
-
-  <body>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>
+{% block content %}
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
     {% else %}
-    <div class="place-details">
+
+    <div class="w3-container">
       <h1>{{ place.name }}</h1>
-      <h2>{{ place.street_address }} {{ place.suburb }} {{ place.state }}, {{ place.postcode }}</h2>
+      <h3>{{ place.street_address }}</h3>
+      <h3>{{ place.suburb }} {{ place.state }}, {{ place.postcode }}</h3>
     </div>
+
+    {% block review %}
+    <div>
+      <a href="{% url 'places:review' place.id %}" style="text-decoration:none;">
+      <div class="w3-panel w3-gray">
+        <p>Want to leave a review?</p>
+      </div>
+      </a>
+    <div>
+    {% endblock review %}
+
+    <div class="w3-container">
+      {% for name, score in place.scorecard.scores.items %}
+        {% if score > 0 %}
+          <h2 style="display:inline">{{name|title}}</h2>
+          <h4 style="display:inline"> +{{score}}</h4>
+        {% endif %}
+      {% endfor %}
+    </div>
+
     {% endif %}
-    
-  </body>
-</html>
+
+{% endblock content %}
