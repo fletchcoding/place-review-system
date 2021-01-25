@@ -1,26 +1,12 @@
 import datetime
 
 from django.db import models
-
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
-
-class PLACE_ATTRIBUTES():
-    attr_list = (
-        ('AT', 'Atmosphere'),
-        ('CL', 'Cleanliness'),
-        ('DE', 'Decor'),
-        ('DR', 'Drink'),
-        ('EN', 'Entertainment'),
-        ('FO', 'Food'),
-        ('QU', 'Quality'),
-        ('SE', 'Service'),
-        ('SP', 'Speed'),
-        ('VA', 'Value'),
-    )
 
 class Place(models.Model):
     name = models.CharField(max_length=100)
@@ -38,50 +24,74 @@ class Review(models.Model):
     """
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    review_date = models.DateTimeField('Date review published', null=True, blank=True)
     visit_date = models.DateTimeField('Visit date and time', default=timezone.now())
 
-    positive_feedback = ArrayField(
-        models.CharField(choices=PLACE_ATTRIBUTES.attr_list, max_length=4),
-        blank=True,
-        null=True,
-        unique=True
-    )
-    negative_feedback = ArrayField(
-        models.CharField(choices=PLACE_ATTRIBUTES.attr_list, max_length=4),
-        blank=True,
-        null=True,
-        unique=True
-    )
+    def __str__(self):
+        return str(self.place) + ' for ' + str(self.visit_date) + ', by ' + str(self.reviewer.username)
+
+
+
+class Feedback(models.Model):
+
+    review = models.OneToOneField(Review, on_delete=models.CASCADE)
+    atmosphere = models.BooleanField(null=True)
+    cleanliness = models.BooleanField(null=True)
+    decor = models.BooleanField(null=True)
+    drink = models.BooleanField(null=True)
+    entertainment = models.BooleanField(null=True)
+    food = models.BooleanField(null=True)
+    quality = models.BooleanField(null=True)
+    service = models.BooleanField(null=True)
+    speed = models.BooleanField(null=True)
+    value = models.BooleanField(null=True)
 
     def __str__(self):
-        return str(self.place) + ', by ' + str(self.visit_date)
-
-    def check_feedback_count(self):
         """
-        Returns the total number of rated attrbutes
+        Prints the rated attributes.
         """
-        return len(self.positive_feedback) + len(self.negative_feedback)
+        pos = ''
+        neg = ''
+        for field in self.get_field_names():
+            if getattr(self, field) == True:
+                pos += field + ','
+            elif getattr(self, field) == False:
+                neg += field + ','
+        return 'pos[' + pos + '], neg[' + neg + ']'
 
-    def check_unique(self):
+    def get_feedback(self, value):
         """
-        Returns true if positive_feedback and negative_feedback contain
-         unique items
+        Returns feedbacks matching value(True/ False)
         """
-        return True if (len(set(self.positive_feedback).intersection(self.negative_feedback)) == 0) else False
+        ret = []
+        for field in self.get_field_names():
+            if getattr(self, field) == value:
+                ret.append(field)
+        return ret
 
-    def save(self, *args, **kwargs):
+
+    def get_field_names(cls):
         """
-        Override save function to check unique model constraints
+        Helper function to return names of rated attributes
         """
-        if self.check_unique()==False:
-            raise ValidationError("Cannot rate an attribute BOTH negatively and positively.")
+        names = []
+        for field in Feedback._meta.fields:
+            if field.name != "id" and field.name != 'review':
+                names.append(field.name)
+        return names
 
-        if self.check_feedback_count()<3:
-            raise ValidationError("Minimum of 3 attribute feedbacks required.")
-
-        super().save(*args, **kwargs)
-
+    def get_counts(self):
+        """
+        Returns the (True, False) counts as tuple
+        """
+        pos = 0
+        neg = 0
+        for field in Feedback._meta.fields:
+            if field.name != "id" and field.name != 'review':
+                if field.value_from_object(self) is True:
+                    pos += 1
+                elif field.value_from_object(self) is False:
+                    neg += 1
+        return (pos, neg)
 
 class Scorecard(models.Model):
     """
@@ -94,9 +104,27 @@ class Scorecard(models.Model):
     )
     scores = models.JSONField(default=dict)
 
-    def update_record_with_newest_review(self, user):
+    def count_scores(self):
         """
-        Updates the place review record with a user's newest review
+        Counts the ratings for all most-current reviews
         """
-        reviews = Review.objects.filter(reviewer = user)
-        print(reviews[0])
+        # Get reviewers of this place
+        counts = {}
+        p = Q(place=self.place)
+        users = Review.objects.filter(p).distinct('reviewer').values('reviewer')
+        # Loops over users and gets most recent review
+        for u in users:
+            f = Review.objects.filter(p, reviewer=u['reviewer']
+                ).latest('visit_date').feedback
+            for attr in f.get_feedback(True):
+                if attr in counts:
+                    counts[attr] += 1
+                else:
+                    counts[attr] = 1
+            for attr in f.get_feedback(False):
+                if attr in counts:
+                    counts[attr] -= 1
+                else:
+                    counts[attr] = -1
+        self.scores = counts
+        self.save()
