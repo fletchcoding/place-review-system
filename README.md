@@ -4,21 +4,19 @@ An overhaul of the current review system, enabling useful feedback through datap
 ## TODO:
 - User testing
 - Review form
-  -> Add feedback model to review admin page
   -> Post operation validation
-  -> Needs a seperate html page from detail (or extend differently), as it will handle errors differently
 - Review testing
 - Scorecard
-  -> constraints
-  -> delete related record
-  -> update function
+  - Constraints
+  - Details view to display scorecard
 - Scorecard testing
-- Details view to display scorecard
 - View testing
 - Move away from w3.css and implement custom sass for UI
+- Search function to filter front page queryset
+  - Connect with google places api to pull venue details if they do not exist.
 
 ## Considerations"
 - Consider what data to keep when users/reviews/venues are deleted
 - Crossovers in place attributes?
-  -> Food/Drink and Quality
+  - Food/Drink and Quality
 - Refactor review.html to remove repetition, need to reference and loop through Feedback model field names
