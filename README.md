@@ -8,7 +8,6 @@ An overhaul of the current review system, enabling useful feedback through datap
 - Review testing
 - Scorecard
   - Constraints
-  - Details view to display scorecard
   - Count unique users
   - Scores as percentages of unique users
 - Scorecard testing
