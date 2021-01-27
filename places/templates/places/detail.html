@@ -24,8 +24,10 @@
     <div class="w3-container">
       {% for name, score in place.scorecard.scores.items %}
         {% if score > 0 %}
-          <h2 style="display:inline">{{name|title}}</h2>
-          <h4 style="display:inline"> +{{score}}</h4>
+          <div class="w3-container">
+            <h2 style="display:inline">{{name|title}}</h2>
+            <h4 style="display:inline"> +{{score}}</h4>
+          </div>
         {% endif %}
       {% endfor %}
     </div>
