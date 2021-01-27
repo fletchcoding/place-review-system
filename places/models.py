@@ -1,4 +1,5 @@
 import datetime
+from math import floor
 
 from django.db import models
 from django.db.models import Q
@@ -106,14 +107,20 @@ class Scorecard(models.Model):
 
     def count_scores(self):
         """
-        Counts the ratings for all most-current reviews
+        Counts the scores for all most-current reviews
+         Scores must indicate:
+         1 - Percentage of attributes (Pos v Neg)
+         2 - Percentage of reviews (Attr v Feedbacks)
         """
-        # Get reviewers of this place
         counts = {}
         totals = {}
-        overall = {}
+        attributes = {}
+        feedbacks = {}
+
+        # Get reviewers of this place
         p = Q(place=self.place)
         users = Review.objects.filter(p).distinct('reviewer').values('reviewer')
+        review_count = users.count()
         # Loops over users and gets most recent review
         for u in users:
             # Filter reivews by place per user, taking only latest feedback
@@ -135,9 +142,12 @@ class Scorecard(models.Model):
                 else:
                     counts[attr] = -1
                     totals[attr] = 1
-            # Calculate attribute percentages
+
+        # Calculate attribute percentages
+        outputs = {}
         for attr in counts:
-            overall[attr] = floor(counts[attr] / totals[attr] * 100)
-            
-        self.scores = overall
+            outputs[attr] = (floor(counts[attr] / totals[attr] * 100),
+                floor(totals[attr] / review_count * 100))
+
+        self.scores = outputs
         self.save()

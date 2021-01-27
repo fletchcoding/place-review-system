@@ -19,18 +19,20 @@
       </div>
       </a>
     <div>
+
+    <div class="w3-container" style="display:inline-block">
+      {% for attr, scores in place.scorecard.scores.items %}
+      <div class="w3-container w3-border-bottom">
+        <h6 style="margin-bottom:0px">{{ scores.1 }}% of reviews</h6>
+        <h2 style="margin-top:0px; display:inline">{{ attr|title }}</h2>
+        <h4 style="display:inline">{{ scores.0 }}%</h4>
+      </div>
+      {% endfor %}
+
+    </div>
+
     {% endblock review %}
 
-    <div class="w3-container">
-      {% for name, score in place.scorecard.scores.items %}
-        {% if score > 0 %}
-          <div class="w3-container">
-            <h2 style="display:inline">{{name|title}}</h2>
-            <h4 style="display:inline"> +{{score}}</h4>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
 
     {% endif %}
 
