@@ -28,11 +28,10 @@ class Review(models.Model):
     """
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    visit_date = models.DateTimeField('Visit date and time', default=timezone.now())
+    visit_date = models.DateTimeField('Visit date and time', default=timezone.now)
 
     def __str__(self):
         return str(self.place) + ' for ' + str(self.visit_date) + ', by ' + str(self.reviewer.username)
-
 
 
 class Feedback(models.Model):
@@ -77,7 +76,7 @@ class Feedback(models.Model):
 
     def get_field_names(cls):
         """
-        Helper function to return names of rated attributes
+        Helper function to return all names of feedback attributes
         """
         names = []
         for field in Feedback._meta.fields:
