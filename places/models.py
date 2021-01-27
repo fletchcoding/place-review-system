@@ -110,21 +110,34 @@ class Scorecard(models.Model):
         """
         # Get reviewers of this place
         counts = {}
+        totals = {}
+        overall = {}
         p = Q(place=self.place)
         users = Review.objects.filter(p).distinct('reviewer').values('reviewer')
         # Loops over users and gets most recent review
         for u in users:
+            # Filter reivews by place per user, taking only latest feedback
             f = Review.objects.filter(p, reviewer=u['reviewer']
                 ).latest('visit_date').feedback
+            # Loop over positive rated attributes
             for attr in f.get_feedback(True):
                 if attr in counts:
                     counts[attr] += 1
+                    totals[attr] += 1
                 else:
                     counts[attr] = 1
+                    totals[attr] = 1
+            # Loop over negatively rated attributes
             for attr in f.get_feedback(False):
                 if attr in counts:
                     counts[attr] -= 1
+                    totals[attr] += 1
                 else:
                     counts[attr] = -1
-        self.scores = counts
+                    totals[attr] = 1
+            # Calculate attribute percentages
+        for attr in counts:
+            overall[attr] = floor(counts[attr] / totals[attr] * 100)
+            
+        self.scores = overall
         self.save()
