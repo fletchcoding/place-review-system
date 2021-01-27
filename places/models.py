@@ -10,6 +10,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 
 class Place(models.Model):
+    """
+    Stores a place
+    """
     name = models.CharField(max_length=100)
     street_address = models.CharField(max_length=100)
     suburb = models.CharField(max_length=50)
@@ -21,7 +24,7 @@ class Place(models.Model):
 
 class Review(models.Model):
     """
-    Stores a feedback for a select few of defined place attributes
+    Stores a review's details, linking place, user and feedback
     """
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -33,7 +36,9 @@ class Review(models.Model):
 
 
 class Feedback(models.Model):
-
+    """
+    Stores a review's feedback points
+    """
     review = models.OneToOneField(Review, on_delete=models.CASCADE)
     atmosphere = models.BooleanField(null=True)
     cleanliness = models.BooleanField(null=True)
@@ -96,7 +101,7 @@ class Feedback(models.Model):
 
 class Scorecard(models.Model):
     """
-    Maintains an updated score of each possible place attribute
+    Stores a score of each feedback attribute
     """
     place = models.OneToOneField(
         Place,
