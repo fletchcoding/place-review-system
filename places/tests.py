@@ -7,16 +7,26 @@ def create_fake_place(name):
     """
     Creates a dummy place object with input name
     """
-    place = Place(name=name, street_address="123 Fake St", suburb="Alsofake",
+    Place.objects.create(name=name, street_address="123 Fake St", suburb="Alsofake",
         state="FAK", postcode=1234)
-    return place
 
 def create_fake_user(name):
     """
-    Creats a fake user object with input name
+    Creates a fake user object with input name
     """
-    user = User.objects.create_user(username=name, password='12345')
-    return user
+    User.objects.create_user(username=name, password='12345')
+
+def get_attrs():
+    return ['atmosphere',
+        'cleanliness',
+        'decor',
+        'drink',
+        'entertainment',
+        'food',
+        'quality',
+        'service',
+        'speed',
+        'value']
 
 class FeedbackModelTests(TestCase):
 
@@ -57,23 +67,56 @@ class FeedbackModelTests(TestCase):
         get_fieldnames() returns all rateable fields
         """
         feedback = Feedback()
-        attrs = ['atmosphere',
-            'cleanliness',
-            'decor',
-            'drink',
-            'entertainment',
-            'food',
-            'quality',
-            'service',
-            'speed',
-            'value'
-        ]
+        attrs = get_attrs()
         self.assertEqual(feedback.get_field_names(), attrs)
 
     def test_get_fieldnames_unique(self):
         """
-        get_fieldnames() returns a unique list
+        get_fieldnames() returns a unique list of attributes
         """
         feedback = Feedback()
         self.assertEqual(len(set(feedback.get_field_names())),
             len(feedback.get_field_names()))
+
+    def test_get_counts_none(self):
+        """
+        get_counts() returns zero value tuple when no feedback
+        """
+        feedback = Feedback()
+        self.assertEqual(feedback.get_counts(), (0,0))
+
+    def test_get_counts_true(self):
+        """
+        get_counts() returns correct count of true feedbacks
+        """
+        feedback = Feedback()
+        attrs = get_attrs()
+        for attr in attrs:
+            setattr(feedback, attr, True)
+        self.assertEqual(feedback.get_counts(), (len(attrs),0))
+
+    def test_get_counts_false(self):
+        """
+        get_counts() returns correct count of false feedbacks
+        """
+        feedback = Feedback()
+        attrs = get_attrs()
+        for attr in attrs:
+            setattr(feedback, attr, False)
+        self.assertEqual(feedback.get_counts(), (0,len(attrs)))
+
+    def test_get_counts_mix(self):
+        """
+        get_counts() doesn't mix true and false counts
+        """
+        feedback = Feedback()
+        attrs = get_attrs()
+        flip = False
+        for attr in attrs:
+            if flip:
+                setattr(feedback, attr, False)
+                flip = False
+            else:
+                setattr(feedback, attr, True)
+                flip = True
+        self.assertEqual(feedback.get_counts()[0] + feedback.get_counts()[1], len(attrs))

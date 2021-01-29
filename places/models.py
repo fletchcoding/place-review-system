@@ -34,6 +34,7 @@ class Review(models.Model):
         return str(self.place) + ' for ' + str(self.visit_date) + ', by ' + str(self.reviewer.username)
 
 
+
 class Feedback(models.Model):
     """
     Stores a review's feedback points
