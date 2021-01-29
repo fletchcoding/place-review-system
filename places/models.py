@@ -1,4 +1,5 @@
 import datetime
+from math import floor
 
 from django.db import models
 from django.db.models import Q
@@ -9,6 +10,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 
 class Place(models.Model):
+    """
+    Stores a place
+    """
     name = models.CharField(max_length=100)
     street_address = models.CharField(max_length=100)
     suburb = models.CharField(max_length=50)
@@ -20,11 +24,11 @@ class Place(models.Model):
 
 class Review(models.Model):
     """
-    Stores a feedback for a select few of defined place attributes
+    Stores a review's details, linking place, user and feedback
     """
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    visit_date = models.DateTimeField('Visit date and time', default=timezone.now())
+    visit_date = models.DateTimeField('Visit date and time', default=timezone.now)
 
     def __str__(self):
         return str(self.place) + ' for ' + str(self.visit_date) + ', by ' + str(self.reviewer.username)
@@ -32,7 +36,9 @@ class Review(models.Model):
 
 
 class Feedback(models.Model):
-
+    """
+    Stores a review's feedback points
+    """
     review = models.OneToOneField(Review, on_delete=models.CASCADE)
     atmosphere = models.BooleanField(null=True)
     cleanliness = models.BooleanField(null=True)
@@ -71,7 +77,7 @@ class Feedback(models.Model):
 
     def get_field_names(cls):
         """
-        Helper function to return names of rated attributes
+        Helper function to return all names of feedback attributes
         """
         names = []
         for field in Feedback._meta.fields:
@@ -95,7 +101,7 @@ class Feedback(models.Model):
 
 class Scorecard(models.Model):
     """
-    Maintains an updated score of each possible place attribute
+    Stores a score of each feedback attribute
     """
     place = models.OneToOneField(
         Place,
@@ -106,25 +112,47 @@ class Scorecard(models.Model):
 
     def count_scores(self):
         """
-        Counts the ratings for all most-current reviews
+        Counts the scores for all most-current reviews
+         Scores must indicate:
+         1 - Percentage of attributes (Pos v Neg)
+         2 - Percentage of reviews (Attr v Feedbacks)
         """
-        # Get reviewers of this place
         counts = {}
+        totals = {}
+        attributes = {}
+        feedbacks = {}
+
+        # Get reviewers of this place
         p = Q(place=self.place)
         users = Review.objects.filter(p).distinct('reviewer').values('reviewer')
+        review_count = users.count()
         # Loops over users and gets most recent review
         for u in users:
+            # Filter reivews by place per user, taking only latest feedback
             f = Review.objects.filter(p, reviewer=u['reviewer']
                 ).latest('visit_date').feedback
+            # Loop over positive rated attributes
             for attr in f.get_feedback(True):
                 if attr in counts:
                     counts[attr] += 1
+                    totals[attr] += 1
                 else:
                     counts[attr] = 1
+                    totals[attr] = 1
+            # Loop over negatively rated attributes
             for attr in f.get_feedback(False):
                 if attr in counts:
                     counts[attr] -= 1
+                    totals[attr] += 1
                 else:
                     counts[attr] = -1
-        self.scores = counts
+                    totals[attr] = 1
+
+        # Calculate attribute percentages
+        outputs = {}
+        for attr in counts:
+            outputs[attr] = (floor(counts[attr] / totals[attr] * 100),
+                floor(totals[attr] / review_count * 100))
+
+        self.scores = outputs
         self.save()
