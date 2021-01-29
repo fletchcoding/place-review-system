@@ -2,15 +2,10 @@
 An overhaul of the current review system, enabling useful feedback through datapoints for hospitality venues 
 
 ## TODO:
-- User testing
-- Review form
-  -> Post operation validation
-- Review testing
+- Views overhaul
 - Scorecard
   - Constraints
-  - Count unique users
-  - Scores as percentages of unique users
-- Scorecard testing
+  - Testing
 - View testing
 - Move away from w3.css and implement custom sass for UI
 - Search function to filter front page queryset
